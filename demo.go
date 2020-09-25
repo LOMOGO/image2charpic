@@ -31,19 +31,19 @@ func main() {
 	bounds := img.Bounds()
 	dx := bounds.Dx()
 	dy := bounds.Dy()
-	//创建vg.Canvas
-	c := vgimg.NewWith(
-		vgimg.UseWH(vg.Length(dx), vg.Length(dy)),
-		vgimg.UseBackgroundColor(color.RGBA{}),
-	)
+
 	fontsize, _ := strconv.Atoi(size)
 	vgfont, _ := vg.MakeFont("Courier", vg.Length(fontsize))
 	//文字的宽度和高度
 	fontWidth := vgfont.Width(text)
 	fontHeight := vgfont.Extents().Height
-
-	for x := vg.Length(dx); x > vg.Length(0) ; x -= fontWidth {
-		for y := vg.Length(dy); y > vg.Length(0); y -= fontHeight*0.585 {
+	//创建vg.Canvas
+	c := vgimg.NewWith(
+		vgimg.UseWH(vg.Length(dx)-fontWidth, vg.Length(dy)),
+		vgimg.UseBackgroundColor(color.RGBA{}),
+	)
+	for x := vg.Length(dx); x >= vg.Length(0) ; x -= fontWidth {
+		for y := vg.Length(dy); y >= vg.Length(0); y -= fontHeight*0.585 {
 			//获取(x, (dy + 1) - y)点的RGBA信息，之所以y坐标这样表示是因为img.At默认的坐标起始点是左上角，而vgimg的SetColor方法的默认坐标起始点是左下角，如果不转换，输出的图片将会倒立
 			colorRGBA := img.At(int(x), (dy + 1) - int(y))
 			r, g, b, a := colorRGBA.RGBA()
